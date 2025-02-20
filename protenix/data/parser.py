@@ -307,7 +307,9 @@ class MMCIFParser:
 
             seq_nums = entity_poly_seq.num[chain_mask].to_numpy(dtype=int)
 
-            if np.unique(seq_nums).size == seq_nums.size:
+            uniq_seq_num = np.unique(seq_nums).size
+
+            if uniq_seq_num == seq_nums.size:
                 # no altloc residues
                 poly_res_names[entity_id] = seq_mon_ids
                 continue
@@ -332,10 +334,12 @@ class MMCIFParser:
                 if select_mask[i]:
                     matching_res_id += 1
 
-            seq_mon_ids = seq_mon_ids[select_mask]
-            seq_nums = seq_nums[select_mask]
-            assert len(seq_nums) == max(seq_nums)
-            poly_res_names[entity_id] = seq_mon_ids
+            new_seq_mon_ids = seq_mon_ids[select_mask]
+            new_seq_nums = seq_nums[select_mask]
+            assert (
+                len(new_seq_nums) == uniq_seq_num
+            ), f"seq_nums not match:\n{seq_nums=}\n{new_seq_nums=}\n{seq_mon_ids=}\n{new_seq_mon_ids=}"
+            poly_res_names[entity_id] = new_seq_mon_ids
         return poly_res_names
 
     def get_sequences(self, atom_array=None) -> dict:
@@ -722,6 +726,9 @@ class MMCIFParser:
         # created AtomArray of first model from mmcif atom_site (Asymmetric Unit)
         atom_array = self.get_structure()
 
+        # convert MSE to MET to consistent with MMCIFParser.get_poly_res_names()
+        atom_array = self.mse_to_met(atom_array)
+
         # update sequences: keep same altloc residue with atom_array
         bioassembly_dict["sequences"] = self.get_sequences(atom_array)
 
@@ -737,7 +744,6 @@ class MMCIFParser:
             ),
             self.fix_arginine,
             self.add_missing_atoms_and_residues,  # and add annotation is_resolved (False for missing atoms)
-            self.mse_to_met,  # do mse_to_met() after add_missing_atoms_and_residues()
             Filter.remove_element_X,  # remove X element (including ASX->ASP, GLX->GLU) after add_missing_atoms_and_residues()
         ]
 
@@ -1690,6 +1696,9 @@ class DistillationMMCIFParser(MMCIFParser):
         # created AtomArray of first model from mmcif atom_site (Asymmetric Unit)
         atom_array = self.get_structure()
 
+        # convert MSE to MET to consistent with MMCIFParser.get_poly_res_names()
+        atom_array = self.mse_to_met(atom_array)
+
         structure_dict = {
             "pdb_id": self.pdb_id,
             "atom_array": None,
@@ -1703,7 +1712,6 @@ class DistillationMMCIFParser(MMCIFParser):
         pipeline_functions = [
             self.fix_arginine,
             self.add_missing_atoms_and_residues,  # add UNK
-            self.mse_to_met,  # do mse_to_met() after add_missing_atoms_and_residues()
         ]
 
         for func in pipeline_functions:
