@@ -9,7 +9,7 @@ You can follow our [twitter](https://x.com/ai4s_protenix) or join the conversati
 ![Protenix predictions](assets/protenix_predictions.gif)
 
 ## ⚡ Try it online
-- [Web server link](http://101.126.11.40:8000/)
+- [Web server link](https://protenix-server.com)
 
 
 ## 🔥 Feature Update
