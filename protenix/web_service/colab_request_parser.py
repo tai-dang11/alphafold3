@@ -33,7 +33,7 @@ from protenix.web_service.colab_request_utils import run_mmseqs2_service
 from protenix.web_service.dependency_url import URL
 
 MMSEQS_SERVICE_HOST_URL = os.getenv(
-    "MMSEQS_SERVICE_HOST_URL", "http://101.126.11.40:80"
+    "MMSEQS_SERVICE_HOST_URL", "https://protenix-server.com/api/msa"
 )
 MAX_ATOM_NUM = 60000
 MAX_TOKEN_NUM = 5000
