@@ -166,17 +166,16 @@ def download_infercence_cache(configs: Any, model_version: str = "v0.2.0") -> No
     current_file_path = os.path.abspath(__file__)
     current_directory = os.path.dirname(current_file_path)
     code_directory = os.path.dirname(current_directory)
-
-    data_cache_dir = os.path.join(code_directory, "release_data/ccd_cache")
-    os.makedirs(data_cache_dir, exist_ok=True)
-    for cache_name, fname in [
-        ("ccd_components_file", "components.v20240608.cif"),
-        ("ccd_components_rdkit_mol_file", "components.v20240608.cif.rdkit_mol.pkl"),
-    ]:
-        if not opexists(cache_path := os.path.abspath(opjoin(data_cache_dir, fname))):
+    for cache_name in ("ccd_components_file", "ccd_components_rdkit_mol_file"):
+        if not opexists(configs[cache_name]):
+            os.makedirs(os.path.dirname(configs[cache_name]), exist_ok=True)
             tos_url = URL[cache_name]
+            assert os.path.basename(tos_url) == os.path.basename(configs[cache_name]), (
+                f"{cache_name} file name is incorrect, `{URL[cache_name]}` and "
+                f"`{configs[cache_name]}`. Please check and try again."
+            )
             logger.info(f"Downloading data cache from\n {tos_url}...")
-            urllib.request.urlretrieve(tos_url, cache_path)
+            urllib.request.urlretrieve(tos_url, configs[cache_name])
 
     checkpoint_path = configs.load_checkpoint_path
 
