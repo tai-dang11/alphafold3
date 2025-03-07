@@ -163,29 +163,29 @@ class InferenceRunner(object):
 
 
 def download_infercence_cache(configs: Any, model_version: str = "v0.2.0") -> None:
-    current_file_path = os.path.abspath(__file__)
-    current_directory = os.path.dirname(current_file_path)
-    code_directory = os.path.dirname(current_directory)
+
     for cache_name in ("ccd_components_file", "ccd_components_rdkit_mol_file"):
-        if not opexists(configs[cache_name]):
-            os.makedirs(os.path.dirname(configs[cache_name]), exist_ok=True)
+        cur_cache_fpath = configs["data"][cache_name]
+        if not opexists(cur_cache_fpath):
+            os.makedirs(os.path.dirname(cur_cache_fpath), exist_ok=True)
             tos_url = URL[cache_name]
-            assert os.path.basename(tos_url) == os.path.basename(configs[cache_name]), (
-                f"{cache_name} file name is incorrect, `{URL[cache_name]}` and "
-                f"`{configs[cache_name]}`. Please check and try again."
+            assert os.path.basename(tos_url) == os.path.basename(cur_cache_fpath), (
+                f"{cache_name} file name is incorrect, `{tos_url}` and "
+                f"`{cur_cache_fpath}`. Please check and try again."
             )
-            logger.info(f"Downloading data cache from\n {tos_url}...")
-            urllib.request.urlretrieve(tos_url, configs[cache_name])
+            logger.info(
+                f"Downloading data cache from\n {tos_url}... to {cur_cache_fpath}"
+            )
+            urllib.request.urlretrieve(tos_url, cur_cache_fpath)
 
     checkpoint_path = configs.load_checkpoint_path
 
     if not opexists(checkpoint_path):
-        checkpoint_path = os.path.join(
-            code_directory, f"release_data/checkpoint/model_{model_version}.pt"
-        )
         os.makedirs(os.path.dirname(checkpoint_path), exist_ok=True)
         tos_url = URL[f"model_{model_version}"]
-        logger.info(f"Downloading model checkpoint from\n {tos_url}...")
+        logger.info(
+            f"Downloading model checkpoint from\n {tos_url}... to {checkpoint_path}"
+        )
         urllib.request.urlretrieve(tos_url, checkpoint_path)
         try:
             ckpt = torch.load(checkpoint_path)
@@ -196,7 +196,6 @@ def download_infercence_cache(configs: Any, model_version: str = "v0.2.0") -> No
                 "Download model checkpoint failed, please download by yourself with "
                 f"wget {tos_url} -O {checkpoint_path}"
             )
-        configs.load_checkpoint_path = checkpoint_path
 
 
 def update_inference_configs(configs: Any, N_token: int):
