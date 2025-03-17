@@ -304,6 +304,21 @@ class CIFWriter:
         self.atom_array = atom_array
         self.entity_poly_type = entity_poly_type
 
+    def _get_entity_block(self):
+        if self.entity_poly_type is None:
+            return {}
+        entity_ids_in_atom_array = np.sort(np.unique(self.atom_array.label_entity_id))
+        entity_block_dict = defaultdict(list)
+        for entity_id in entity_ids_in_atom_array:
+            if entity_id not in self.entity_poly_type:
+                entity_type = "non-polymer"
+            else:
+                entity_type = "polymer"
+            entity_block_dict["id"].append(entity_id)
+            entity_block_dict["pdbx_description"].append(".")
+            entity_block_dict["type"].append(entity_type)
+        return pdbx.CIFCategory(entity_block_dict)
+    
     def _get_entity_poly_and_entity_poly_seq_block(self):
         entity_poly = defaultdict(list)
         for entity_id, entity_type in self.entity_poly_type.items():
@@ -321,6 +336,9 @@ class CIFWriter:
             entity_poly["entity_id"].append(entity_id)
             entity_poly["pdbx_strand_id"].append(label_asym_ids_str)
             entity_poly["type"].append(entity_type)
+            
+        if not entity_poly:
+            return {}
 
         entity_poly_seq = defaultdict(list)
         for entity_id, label_asym_ids_str in zip(
@@ -379,6 +397,7 @@ class CIFWriter:
 
         block_dict = {"entry": pdbx.CIFCategory({"id": entry_id})}
         if self.entity_poly_type:
+            block_dict["entity"] = self._get_entity_block()
             block_dict.update(self._get_entity_poly_and_entity_poly_seq_block())
 
         block = pdbx.CIFBlock(block_dict)
