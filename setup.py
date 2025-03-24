@@ -13,15 +13,15 @@
 # limitations under the License.
 
 import sys
-from setuptools import find_packages, setup
 
+from setuptools import find_packages, setup
 
 # Read requirements from the file
 with open("requirements.txt") as f:
     install_requires = f.read().splitlines()
 
 # Check if the user specified the CPU option
-if '--cpu' in sys.argv:
+if "--cpu" in sys.argv:
     # Remove the gpu packages
     try:
         to_drop = [x for x in install_requires if "nvidia" in x or "cuda" in x]
@@ -30,12 +30,12 @@ if '--cpu' in sys.argv:
     except ValueError:
         pass
     # Remove the --cpu option from sys.argv so setuptools doesn't get confused
-    sys.argv.remove('--cpu')
+    sys.argv.remove("--cpu")
 
 setup(
     name="protenix",
     python_requires=">=3.10",
-    version="0.4.4",
+    version="0.4.5",
     description="A trainable PyTorch reproduction of AlphaFold 3.",
     author="Bytedance Inc.",
     url="https://github.com/bytedance/Protenix",
