@@ -8,6 +8,8 @@ You can follow our [twitter](https://x.com/ai4s_protenix) or join the conversati
 
 ![Protenix predictions](assets/protenix_predictions.gif)
 
+**🌟🌟🌟 <ins> We have also open sourced [Protenix-Dock](https://github.com/bytedance/Protenix-Dock), our implementation of a classical protein-ligand docking framework that leverages empirical scoring functions. Without using deep neural networks, Protenix-Dock delivers competitive performance in rigid docking tasks.** </ins>
+
 ## ⚡ Try it online
 - [Web server link](https://protenix-server.com)
 
