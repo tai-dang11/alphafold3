@@ -10,7 +10,7 @@ rm /af3-dev/release_data/release_data.tar.gz
 ```
 
 
-The data should be placed in the `/af3-dev/release_data/` directory. You can also download it to a different directory, but remember to modify the `DATA_ROOT_DIR` in [configs/configs_data.py](../configs/configs_data.py) correspondingly.  Data hierarchy after extraction is as follows:
+The data should be placed in the `/af3-dev/release_data/` directory. You can also download it to a different directory, but remember to modify the `DATA_ROOT_DIR` in [configs/configs_data.py](../configs/configs_data.py) correspondingly. Alternatively, you can set an environment variable "PROTENIX_DATA_ROOT_DIR" to specify the path. Data hierarchy after extraction is as follows:
 
   ```bash
   ├── components.v20240608.cif [408M] # ccd source file
