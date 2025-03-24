@@ -162,7 +162,7 @@ def generate_infer_jsons(protein_msa_res: dict, ligand_file: str) -> List[str]:
 
 def get_default_runner(seeds: Optional[tuple] = None) -> InferenceRunner:
     configs_base["use_deepspeed_evo_attention"] = (
-        os.environ.get("USE_DEEPSPEED_EVO_ATTTENTION", False) == "true"
+        os.environ.get("USE_DEEPSPEED_EVO_ATTENTION", False) == "true"
     )
     configs_base["model"]["N_cycle"] = 10
     configs_base["sample_diffusion"]["N_sample"] = 5

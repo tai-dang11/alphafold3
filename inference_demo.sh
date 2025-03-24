@@ -13,7 +13,7 @@
 # limitations under the License.
 
 export LAYERNORM_TYPE=fast_layernorm
-export USE_DEEPSPEED_EVO_ATTTENTION=true
+export USE_DEEPSPEED_EVO_ATTENTION=true
 
 N_sample=5
 N_step=200

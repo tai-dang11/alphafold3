@@ -289,7 +289,7 @@ def run() -> None:
         filemode="w",
     )
     configs_base["use_deepspeed_evo_attention"] = (
-        os.environ.get("USE_DEEPSPEED_EVO_ATTTENTION", False) == "true"
+        os.environ.get("USE_DEEPSPEED_EVO_ATTENTION", False) == "true"
     )
     configs = {**configs_base, **{"data": data_configs}, **inference_configs}
     configs = parse_configs(

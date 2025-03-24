@@ -13,7 +13,7 @@
 # limitations under the License.
 
 export LAYERNORM_TYPE=fast_layernorm
-export USE_DEEPSPEED_EVO_ATTTENTION=true
+export USE_DEEPSPEED_EVO_ATTENTION=true
 # wget -P /af3-dev/release_model/ https://af3-dev.tos-cn-beijing.volces.com/release_model/model_v0.2.0.pt
 checkpoint_path="/af3-dev/release_model/model_v0.2.0.pt"
 

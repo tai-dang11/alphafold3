@@ -7,7 +7,7 @@
   If the environment variable `LAYERNORM_TYPE` is set to `fast_layernorm`, the model will employ the layernorm we have developed; otherwise, the naive PyTorch layernorm will be adopted. The kernels will be compiled when `fast_layernorm` is called for the first time.
 - **[DeepSpeed DS4Sci_EvoformerAttention kernel](https://www.deepspeed.ai/tutorials/ds4sci_evoformerattention/)** is a memory-efficient attention kernel developed as part of a collaboration between OpenFold and the DeepSpeed4Science initiative. To use this feature, run the following command:
   ```bash
-  export USE_DEEPSPEED_EVO_ATTTENTION=true
+  export USE_DEEPSPEED_EVO_ATTENTION=true
   ```
   DS4Sci_EvoformerAttention is implemented based on [CUTLASS](https://github.com/NVIDIA/cutlass). If you use this feature, You need to clone the CUTLASS repository and specify the path to it in the environment variable CUTLASS_PATH. The [Dockerfile](Dockerfile) has already include this setting:
   ```bash
