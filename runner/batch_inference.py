@@ -24,18 +24,17 @@ from typing import List, Optional, Union
 import click
 import tqdm
 from Bio import SeqIO
+from rdkit import Chem
+
 from configs.configs_base import configs as configs_base
 from configs.configs_data import data_configs
 from configs.configs_inference import inference_configs
-
 from protenix.config import parse_configs
 from protenix.data.json_maker import cif_to_input_json
 from protenix.data.json_parser import lig_file_to_atom_info
 from protenix.data.utils import pdb_to_cif
 from protenix.utils.logger import get_logger
-from rdkit import Chem
-
-from runner.inference import download_infercence_cache, infer_predict, InferenceRunner
+from runner.inference import InferenceRunner, download_infercence_cache, infer_predict
 from runner.msa_search import msa_search, update_infer_json
 
 logger = get_logger(__name__)
@@ -160,13 +159,18 @@ def generate_infer_jsons(protein_msa_res: dict, ligand_file: str) -> List[str]:
     return infer_json_files
 
 
-def get_default_runner(seeds: Optional[tuple] = None) -> InferenceRunner:
+def get_default_runner(
+    seeds: Optional[tuple] = None,
+    n_cycle: int = 10,
+    n_step: int = 200,
+    n_sample: int = 5,
+) -> InferenceRunner:
     configs_base["use_deepspeed_evo_attention"] = (
         os.environ.get("USE_DEEPSPEED_EVO_ATTENTION", False) == "true"
     )
-    configs_base["model"]["N_cycle"] = 10
-    configs_base["sample_diffusion"]["N_sample"] = 5
-    configs_base["sample_diffusion"]["N_step"] = 200
+    configs_base["model"]["N_cycle"] = n_cycle
+    configs_base["sample_diffusion"]["N_sample"] = n_sample
+    configs_base["sample_diffusion"]["N_step"] = n_step
     configs = {**configs_base, **{"data": data_configs}, **inference_configs}
     configs = parse_configs(
         configs=configs,
@@ -183,6 +187,9 @@ def inference_jsons(
     out_dir: str = "./output",
     use_msa_server: bool = False,
     seeds: tuple = (101,),
+    n_cycle: int = 10,
+    n_step: int = 200,
+    n_sample: int = 5,
 ) -> None:
     """
     infer_json: json file or directory, will run infer with these jsons
@@ -209,7 +216,7 @@ def inference_jsons(
     infer_errors = {}
     inference_configs["dump_dir"] = out_dir
     inference_configs["input_json_path"] = infer_jsons[0]
-    runner = get_default_runner(seeds)
+    runner = get_default_runner(seeds, n_cycle, n_step, n_sample)
     configs = runner.configs
     for idx, infer_json in enumerate(tqdm.tqdm(infer_jsons)):
         try:
@@ -275,8 +282,11 @@ def protenix_cli():
 @click.option(
     "--seeds", type=str, default="101", help="the inference seed, split by comma"
 )
+@click.option("--cycle", type=int, default=10, help="pairformer cycle number")
+@click.option("--step", type=int, default=200, help="diffusion step")
+@click.option("--sample", type=int, default=5, help="sample number")
 @click.option("--use_msa_server", is_flag=True, help="do msa search or not")
-def predict(input, out_dir, seeds, use_msa_server):
+def predict(input, out_dir, seeds, cycle, step, sample, use_msa_server):
     """
     predict: Run predictions with protenix.
     :param input, out_dir, use_msa_server
@@ -284,10 +294,18 @@ def predict(input, out_dir, seeds, use_msa_server):
     """
     init_logging()
     logger.info(
-        f"run infer with input={input}, out_dir={out_dir}, use_msa_server={use_msa_server}"
+        f"run infer with input={input}, out_dir={out_dir}, cycle={cycle}, step={step}, sample={sample}, use_msa_server={use_msa_server}"
     )
     seeds = list(map(int, seeds.split(",")))
-    inference_jsons(input, out_dir, use_msa_server, seeds=seeds)
+    inference_jsons(
+        input,
+        out_dir,
+        use_msa_server,
+        seeds=seeds,
+        n_cycle=cycle,
+        n_step=step,
+        n_sample=sample,
+    )
 
 
 @click.command()
