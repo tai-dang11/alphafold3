@@ -44,6 +44,8 @@ python3 setup.py develop --cpu
 If you set up `Protenix` by `pip`, you can run the following command to do model inference:
 
 ```bash
+# the default n_cycle/n_step/n_samples is 10/200/5 respectively, you can modify it by passing --cycle x1 --step x2 --sample x3
+
 # run with example.json, which contains precomputed msa dir.
 protenix predict --input examples/example.json --out_dir  ./output --seeds 101
 

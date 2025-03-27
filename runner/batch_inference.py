@@ -166,7 +166,7 @@ def get_default_runner(
     n_sample: int = 5,
 ) -> InferenceRunner:
     configs_base["use_deepspeed_evo_attention"] = (
-        os.environ.get("USE_DEEPSPEED_EVO_ATTTENTION", False) == "true"
+        os.environ.get("USE_DEEPSPEED_EVO_ATTENTION", False) == "true"
     )
     configs_base["model"]["N_cycle"] = n_cycle
     configs_base["sample_diffusion"]["N_sample"] = n_sample
@@ -284,7 +284,7 @@ def protenix_cli():
 )
 @click.option("--cycle", type=int, default=10, help="pairformer cycle number")
 @click.option("--step", type=int, default=200, help="diffusion step")
-@click.option("--sample", type=int, default=5, help="sampler number")
+@click.option("--sample", type=int, default=5, help="sample number")
 @click.option("--use_msa_server", is_flag=True, help="do msa search or not")
 def predict(input, out_dir, seeds, cycle, step, sample, use_msa_server):
     """
