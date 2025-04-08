@@ -230,47 +230,6 @@ def inference_jsons(
         logger.warning(f"run inference failed: {infer_errors}")
 
 
-def batch_inference(
-    protein_msa_res: dict,
-    ligand_file: str,
-    out_dir: str = "./output",
-    seeds: tuple[int] = (101,),
-) -> None:
-    """
-    ligand_file: ligand file or directory, should be in sdf format or smi with smlies list;
-    protein_msa_res: the msa result for `protein`, like:
-        {  "MGHHHHHHHHHHSSGH": {
-                "precomputed_msa_dir": "/path/to/msa_pairing/result/msa/1",
-                "pairing_db": "uniref100"
-            },
-            "MAEVIRSSAFWRSFPIFEEFDSE": {
-                "precomputed_msa_dir": "/path/to/msa_pairing/result/msa/2",
-                "pairing_db": "uniref100"
-            }
-        }
-    out_dir: the infer outout dir, default is `./output`
-    """
-
-    infer_jsons = generate_infer_jsons(protein_msa_res, ligand_file, seeds)
-    logger.info(f"will infer with {len(infer_jsons)} jsons")
-    if len(infer_jsons) == 0:
-        return
-
-    infer_errors = {}
-    inference_configs["dump_dir"] = out_dir
-    inference_configs["input_json_path"] = infer_jsons[0]
-    runner = get_default_runner(seeds=seeds)
-    configs = runner.configs
-    for infer_json in tqdm.tqdm(infer_jsons):
-        try:
-            configs["input_json_path"] = update_infer_json(infer_json, out_dir)
-            infer_predict(runner, configs)
-        except Exception as exc:
-            infer_errors[infer_json] = str(exc)
-    if len(infer_errors) > 0:
-        logger.warning(f"run inference failed: {infer_errors}")
-
-
 @click.group()
 def protenix_cli():
     return
@@ -427,22 +386,5 @@ protenix_cli.add_command(tojson)
 protenix_cli.add_command(msa)
 
 
-def test_batch_inference():
-    ligands_dir = "../examples/ligands"
-    protein_msa_res = {
-        "MASWSHPQFEKGGTHVAETSAPTRSEPDTRVLTLPGTASAPEFRLIDIDGLLNNRATTDVRDLGSGRLNAWGNSFPAAELPAPGSLITVAGIPFTWANAHARGDNIRCEGQVVDIPPGQYDWIYLLAASERRSEDTIWAHYDDGHADPLRVGISDFLDGTPAFGELSAFRTSRMHYPHHVQEGLPTTMWLTRVGMPRHGVARSLRLPRSVAMHVFALTLRTAAAVRLAEGATT": {  # noqa: B950
-            "precomputed_msa_dir": "../examples/7wux/msa/1",
-            "pairing_db": "uniref100",
-        },
-        "MGSSHHHHHHSQDPNSTTTAPPVELWTRDLGSCLHGTLATALIRDGHDPVTVLGAPWEFRRRPGAWSSEEYFFFAEPDSLAGRLALYHPFESTWHRSDGDGVDDLREALAAGVLPIAAVDNFHLPFRPAFHDVHAAHLLVVYRITETEVYVSDAQPPAFQGAIPLADFLASWGSLNPPDDADVFFSASPSGRRWLRTRMTGPVPEPDRHWVGRVIRENVARYRQEPPADTQTGLPGLRRYLDELCALTPGTNAASEALSELYVISWNIQAQSGLHAEFLRAHSVKWRIPELAEAAAGVDAVAHGWTGVRMTGAHSRVWQRHRPAELRGHATALVRRLEAALDLLELAADAVS": {  # noqa: B950
-            "precomputed_msa_dir": "../examples/7wux/msa/2",
-            "pairing_db": "uniref100",
-        },
-    }
-    out_dir = "./infer_output"
-    batch_inference(protein_msa_res, ligands_dir, out_dir=out_dir)
-
-
 if __name__ == "__main__":
-    init_logging()
-    test_batch_inference()
+    predict()
