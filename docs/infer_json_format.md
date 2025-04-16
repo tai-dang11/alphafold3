@@ -197,7 +197,7 @@ To define a covalent bond, two atoms involved in the bond must be identified. Th
 
 * `entity1`, `entity2`: The entity numbers for the two atoms involved in the bond. 
 The entity number corresponds to the order in which the entity appears in the `sequences` list, starting from 1.
-* `copy2`, `copy2`: The copy index (starting from 1) of the `left_entity` and `right_entity`, respectively. These fields are optional, but if specified, both `left_copy` and `right_copy` must be filled simultaneously or left empty at the same time. If neither field is provided, a bond will be created between all pairs of copies of the two entities. For example, if both entity1 and entity2 have two copies, a bond will be formed between entity1.copy1 and entity2.copy1, as well as between entity1.copy2 and entity2.copy2. In this case, the number of copies for both entities must be equal.
+* `copy1`, `copy2`: The copy index (starting from 1) of the `left_entity` and `right_entity`, respectively. These fields are optional, but if specified, both `left_copy` and `right_copy` must be filled simultaneously or left empty at the same time. If neither field is provided, a bond will be created between all pairs of copies of the two entities. For example, if both entity1 and entity2 have two copies, a bond will be formed between entity1.copy1 and entity2.copy1, as well as between entity1.copy2 and entity2.copy2. In this case, the number of copies for both entities must be equal.
 * `position1`, `position2` - The position of the residue (or ligand part) within the entity. 
 The position value starts at 1 and can vary based on the type of entity:
   * For **polymers** (e.g., proteins, DNA, RNA), the position corresponds to the location of the residue in the sequence.
