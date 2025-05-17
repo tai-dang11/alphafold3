@@ -2,17 +2,7 @@
 
 A trainable PyTorch reproduction of [AlphaFold 3](https://www.nature.com/articles/s41586-024-07487-w).
 
-For more information on the model's performance and capabilities, see our technical report ([biorxiv](https://www.biorxiv.org/content/10.1101/2025.01.08.631967v1) | [pdf](Protenix_Technical_Report.pdf)).
-
-You can follow our [twitter](https://x.com/ai4s_protenix) or join the conversation in the [discord server](https://discord.gg/8ZMWy89aMf).
-
 ![Protenix predictions](assets/protenix_predictions.gif)
-
-**🌟🌟🌟 <ins> We have also open sourced [Protenix-Dock](https://github.com/bytedance/Protenix-Dock), our implementation of a classical protein-ligand docking framework that leverages empirical scoring functions. Without using deep neural networks, Protenix-Dock delivers competitive performance in rigid docking tasks.** </ins>
-
-## ⚡ Try it online
-- [Web server link](https://protenix-server.com)
-
 
 ## 🔥 Feature Update
 * 🚀 The preview version of [constraint feature](./README.md#early-access-to-new-constraint-feature) is released to branch [`constraint_esm`](https://github.com/bytedance/Protenix/tree/constraint_esm).
@@ -26,15 +16,6 @@ You can follow our [twitter](https://x.com/ai4s_protenix) or join the conversati
 
 ```bash
 pip3 install protenix
-```
-### Run with Docker:
-
-If you're interested in model training, we recommand to [<u> run with docker</u>](docs/docker_installation.md).
-
-### Local installation (cpu only)
-For development on a CPU-only machine, it is convenient to install with the `--cpu` flag in editable mode:
-```
-python3 setup.py develop --cpu
 ```
 
 ## Inference
@@ -118,10 +99,6 @@ protenix msa --input examples/example_without_msa.json --out_dir ./output
 protenix msa --input examples/prot.fasta --out_dir ./output
 ```
 
-### Run with PyMol
-
-If you want to run Protenix inference with `PyMol`, please refer to [PyMOLfold](https://github.com/colbyford/PyMOLfold).
-
 ## Training
 If you're interested in model training, see [<u> training documentation </u>](docs/training.md).
 
@@ -156,36 +133,6 @@ If you use this code or the model in your research, please cite the following pa
 }
 ```
 
-
 ## Acknowledgements
 
 Implementation of the layernorm operators referred to [OneFlow](https://github.com/Oneflow-Inc/oneflow) and [FastFold](https://github.com/hpcaitech/FastFold). We used [OpenFold](https://github.com/aqlaboratory/openfold) for some [module](protenix/openfold_local/) implementations, except the [`LayerNorm`](protenix/model/layer_norm/).
-
-
-## Contribution
-
-Please check [Contributing](CONTRIBUTING.md) for more details. If you encounter problems using Protenix, feel free to create an issue! We also welcome pull requests from the community.
-
-```bash
-pip install pre-commit
-pre-commit install
-```
-
-So new commits will be automatically checked.
-
-## Code of Conduct
-
-Please check [Code of Conduct](CODE_OF_CONDUCT.md) for more details.
-
-## Security
-
-If you discover a potential security issue in this project, or think you may
-have discovered a security issue, we ask that you notify Bytedance Security via our [security center](https://security.bytedance.com/src) or [vulnerability reporting email](sec@bytedance.com).
-
-Please do **not** create a public GitHub issue.
-
-## License
-
-The Protenix project, including code and model parameters, is made available under the [Apache 2.0 License](./LICENSE), it is free for both academic research and commercial use.
-
-We welcome inquiries and collaboration opportunities for advanced applications of our model, such as developing new features, fine-tuning for specific use cases, and more. Please feel free to contact us at ai4s-bio@bytedance.com.
